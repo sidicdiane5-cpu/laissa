@@ -135,7 +135,8 @@ export default function CheckoutPage() {
   const [showCitySuggestions, setShowCitySuggestions] = useState(false);
 
   const total = getTotal();
-  const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '2250503744336';
+  // Numéro WhatsApp par défaut
+  const whatsappNumber = '2250503744336';
 
   const handleInputChange = (e) => {
     setFormData({
