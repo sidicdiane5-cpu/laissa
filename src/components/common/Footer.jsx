@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Phone, MapPin, ArrowRight } from 'lucide-react';
+import { Mail, Phone, MapPin, ArrowRight } from 'lucide-react';
 import styles from './Footer.module.css';
 
 const FOOTER_LINKS = {
@@ -27,8 +27,48 @@ const FOOTER_LINKS = {
 };
 
 export default function Footer() {
+  const handleNewsletter = (e) => {
+    e.preventDefault();
+    e.target.reset();
+    alert('Merci ! Vous êtes inscrit(e) à notre newsletter. 🌙');
+  };
+
   return (
     <footer className={styles.footer}>
+      {/* Newsletter */}
+      <div className={styles.newsletter}>
+        <div className="container">
+          <div className={styles.newsletterInner}>
+            <div className={styles.newsletterText}>
+              <span className="section-tag">Newsletter Exclusive</span>
+              <h2 className={styles.newsletterTitle}>
+                Restez inspiré(e) avec nos dernières collections
+              </h2>
+              <p className={styles.newsletterSub}>
+                Recevez en avant-première nos nouvelles collections, promotions exclusives et conseils mode islamique.
+              </p>
+            </div>
+            <form className={styles.newsletterForm} onSubmit={handleNewsletter}>
+              <div className={styles.newsletterInputWrap}>
+                <Mail size={18} className={styles.newsletterIcon} />
+                <input
+                  type="email"
+                  placeholder="Votre adresse email..."
+                  className={styles.newsletterInput}
+                  required
+                />
+                <button type="submit" className={styles.newsletterBtn}>
+                  S'abonner <ArrowRight size={16} />
+                </button>
+              </div>
+              <p className={styles.newsletterDisclaimer}>
+                🔒 Vos données sont protégées. Désabonnement en un clic.
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+
       {/* Main Footer */}
       <div className={styles.main}>
         <div className="container">

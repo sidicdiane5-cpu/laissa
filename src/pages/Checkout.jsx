@@ -56,7 +56,9 @@ const getColorName = (hexColor) => {
     '#F5F5F5': 'Blanc fumée',
     '#DCDCDC': 'Gainboro',
     '#D3D3D3': 'Gris clair',
-    '#696969': 'Gris foncé',
+    '#C0C0C0': 'Argent',
+    '#A9A9A9': 'Gris foncé',
+    '#696969': 'Gis',
     '#000080': 'Marine',
     '#00008B': 'Bleu foncé',
     '#0000CD': 'Bleu moyen',
@@ -73,6 +75,7 @@ const getColorName = (hexColor) => {
     '#008B8B': 'Cyan foncé',
     '#008080': 'Thé',
     '#2F4F4F': 'Slate gris foncé',
+    '#696969': 'Gis',
     '#778899': 'Slate gris clair',
     '#BDB76B': 'Kaki foncé',
     '#8FBC8F': 'Mer foncé',
@@ -90,6 +93,7 @@ const getColorName = (hexColor) => {
     '#FF4500': 'Orange rouge',
     '#FF8C00': 'Orange foncé',
     '#FFD700': 'Or',
+    '#FFA500': 'Orange',
     '#FFDAB9': 'Pêche',
     '#FFE4B5': 'Moka',
     '#FFEBCD': 'Blanqué',
@@ -97,6 +101,7 @@ const getColorName = (hexColor) => {
     '#FFDEAD': 'Navajo blanc',
     '#F5DEB3': 'Blé',
     '#DEB887': 'Sablé',
+    '#D2B48C': 'Brun',
     '#BC8F8F': 'Brun rosé',
     '#F4A460': 'Sable',
     '#D2691E': 'Chocolat',
@@ -104,17 +109,42 @@ const getColorName = (hexColor) => {
     '#A0522D': 'Marron',
     '#CD853F': 'Pérou',
     '#FF7F50': 'Cora',
+    '#FA8072': 'Saumon',
     '#E9967A': 'Saumon foncé',
     '#F08080': 'Corail léger',
     '#CD5C5C': 'Indien rouge',
+    '#DC143C': 'Cramoisi',
     '#B22222': 'Feu brique',
     '#8B0000': 'Rouge foncé',
+    '#800000': 'Marron',
+    '#FF0000': 'Rouge',
+    '#FF6347': 'Tomate',
+    '#FF4500': 'Orange rouge',
+    '#FFA07A': 'Saumon léger',
+    '#FA8072': 'Saumon',
+    '#E9967A': 'Saumon foncé',
+    '#F08080': 'Corail léger',
+    '#DC143C': 'Cramoisi',
+    '#B22222': 'Feu brique',
+    '#8B0000': 'Rouge foncé',
+    '#800000': 'Marron',
+    '#FF0000': 'Rouge',
     '#FF69B4': 'Rose chaud',
     '#FF1493': 'Rose profond',
     '#C71585': 'Violet moyen',
     '#DB7093': 'Rose pâle',
     '#FFB6C1': 'Rose léger',
+    '#FFC0CB': 'Rose',
     '#FFA07A': 'Saumon léger',
+    '#FA8072': 'Saumon',
+    '#E9967A': 'Saumon foncé',
+    '#F08080': 'Corail léger',
+    '#CD5C5C': 'Indien rouge',
+    '#DC143C': 'Cramoisi',
+    '#B22222': 'Feu brique',
+    '#8B0000': 'Rouge foncé',
+    '#800000': 'Marron',
+    '#FF0000': 'Rouge',
   };
   
   const upperHex = hexColor.toUpperCase();
@@ -135,8 +165,7 @@ export default function CheckoutPage() {
   const [showCitySuggestions, setShowCitySuggestions] = useState(false);
 
   const total = getTotal();
-  // Numéro WhatsApp par défaut
-  const whatsappNumber = '2250503744336';
+  const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '2250503744336';
 
   const handleInputChange = (e) => {
     setFormData({
