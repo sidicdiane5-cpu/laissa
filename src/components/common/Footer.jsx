@@ -86,13 +86,6 @@ export default function Footer() {
                 Dar Al Hayaa est votre destination haut de gamme pour la mode islamique : 
                 vêtements pudiques, accessoires, beauté halal et électronique de qualité.
               </p>
-
-              <div className={styles.socials}>
-                <a href="#" className={styles.social} aria-label="Facebook">FB</a>
-                <a href="#" className={styles.social} aria-label="Instagram">IG</a>
-                <a href="#" className={styles.social} aria-label="Twitter">X</a>
-                <a href="#" className={styles.social} aria-label="YouTube">YT</a>
-              </div>
             </div>
 
             {/* Links */}
