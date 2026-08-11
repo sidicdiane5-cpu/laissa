@@ -18,7 +18,7 @@ export function ContactPage() {
 
   return (
     <>
-      <Helmet><title>Contact — Laissa</title></Helmet>
+      <Helmet><title>Contact — Dar Al Hayaa</title></Helmet>
       <div className={styles.pageHero}>
         <div className="container">
           <span className="section-tag">Nous contacter</span>
@@ -32,7 +32,7 @@ export function ContactPage() {
           <div className={styles.contactInfo}>
             {[
               { icon: <Phone size={20} />, label: 'Téléphone', value: '05 03 74 43 36', sub: 'Lun-Sam 9h-19h' },
-              { icon: <Mail size={20} />, label: 'Email', value: 'contact@laissa.com', sub: 'Réponse sous 24h' },
+              { icon: <Mail size={20} />, label: 'Email', value: 'contact@daralhayaa.com', sub: 'Réponse sous 24h' },
               { icon: <MapPin size={20} />, label: 'Adresse', value: 'Abidjan, Côte d\'Ivoire', sub: 'Côte d\'Ivoire' },
               { icon: <Clock size={20} />, label: 'Horaires', value: 'Lun-Sam 9h-19h', sub: 'Dimanche fermé' },
             ].map((item, i) => (
@@ -146,12 +146,12 @@ export function FAQPage() {
 export function AboutPage() {
   return (
     <>
-      <Helmet><title>À Propos — Laissa</title></Helmet>
+      <Helmet><title>À Propos — Dar Al Hayaa</title></Helmet>
       <div className={styles.pageHero}>
         <div className="container">
           <span className="section-tag">Notre Histoire</span>
-          <h1 className={styles.heroTitle}>À Propos de Laissa</h1>
-          <p className={styles.heroDesc}>Une passion pour la mode, une mission de qualité.</p>
+          <h1 className={styles.heroTitle}>À Propos de Dar Al Hayaa</h1>
+          <p className={styles.heroDesc}>Une passion pour la mode islamique, une mission de qualité.</p>
         </div>
       </div>
 
@@ -160,18 +160,19 @@ export function AboutPage() {
           <div className={styles.aboutText}>
             <h2 className={styles.aboutTitle}>Notre Mission</h2>
             <p>
-              Laissa est née d'une conviction simple : chaque personne mérite de s'habiller 
-              avec élégance, qualité et style. 
+              Dar Al Hayaa est née d'une conviction simple : chaque femme et chaque homme mérite de s'habiller 
+              avec élégance, qualité et dans le respect de ses valeurs islamiques. 
             </p>
             <p>
-              Notre boutique propose une sélection rigoureuse de vêtements et accessoires, 
-              le tout dans un cadre de confiance et de qualité certifiée.
+              Notre boutique propose une sélection rigoureuse de vêtements pudiques, 
+              accessoires islamiques, parfums halal et équipements électroniques, le tout 
+              dans un cadre de confiance et de qualité certifiée.
             </p>
             <h2 className={styles.aboutTitle} style={{ marginTop: 32 }}>Nos Valeurs</h2>
             <div className={styles.values}>
               {[
                 { emoji: '✦', title: 'Qualité', desc: 'Chaque article est sélectionné avec soin pour sa durabilité et son authenticité.' },
-                { emoji: '🌙', title: 'Confiance', desc: 'Service client transparent et paiement sécurisé à la livraison.' },
+                { emoji: '🌙', title: 'Confiance', desc: 'Certifications halal, paiement sécurisé et service client transparent.' },
                 { emoji: '💛', title: 'Communauté', desc: '+15 000 familles nous font confiance à travers toute la Côte d\'Ivoire.' },
                 { emoji: '🌿', title: 'Éthique', desc: 'Partenariats avec des fournisseurs respectueux des normes de qualité.' },
               ].map((v, i) => (
@@ -195,7 +196,7 @@ export function AboutPage() {
 export function PrivacyPage() {
   return (
     <>
-      <Helmet><title>Politique de Confidentialité — Laissa</title></Helmet>
+      <Helmet><title>Politique de Confidentialité — Dar Al Hayaa</title></Helmet>
       <div className={styles.pageHero}>
         <div className="container">
           <h1 className={styles.heroTitle}>Politique de Confidentialité</h1>
@@ -225,13 +226,13 @@ export function PrivacyPage() {
             <li><strong>Droit de rectification :</strong> Modifier vos données inexactes</li>
             <li><strong>Droit à l'effacement :</strong> Demander la suppression de vos données</li>
           </ul>
-          <p>Pour exercer ces droits, contactez-nous à contact@laissa.com</p>
+          <p>Pour exercer ces droits, contactez-nous à contact@daralhayaa.com</p>
           
           <h2>5. Conservation des données</h2>
           <p>Vos données de commande sont conservées uniquement le temps nécessaire au traitement de votre commande et à des fins de livraison.</p>
           
           <h2>6. Contact</h2>
-          <p>Pour toute question concernant votre confidentialité : contact@laissa.com ou 05 03 74 43 36</p>
+          <p>Pour toute question concernant votre confidentialité : contact@daralhayaa.com ou 05 03 74 43 36</p>
         </div>
       </div>
     </>
@@ -241,7 +242,7 @@ export function PrivacyPage() {
 export function TermsPage() {
   return (
     <>
-      <Helmet><title>Conditions Générales de Vente — Laissa</title></Helmet>
+      <Helmet><title>Conditions Générales de Vente — Dar Al Hayaa</title></Helmet>
       <div className={styles.pageHero}>
         <div className="container">
           <h1 className={styles.heroTitle}>Conditions Générales de Vente</h1>
@@ -250,7 +251,7 @@ export function TermsPage() {
       <div className="container-sm section">
         <div className={styles.legalContent}>
           <h2>1. Objet</h2>
-          <p>Les présentes Conditions Générales de Vente (CGV) régissent toutes les ventes de produits effectuées sur le site Laissa entre la société Laissa et tout acheteur.</p>
+          <p>Les présentes Conditions Générales de Vente (CGV) régissent toutes les ventes de produits effectuées sur le site internet Dar Al Hayaa entre la société Dar Al Hayaa et tout acheteur.</p>
           
           <h2>2. Acceptation des conditions</h2>
           <p>Le fait de passer commande sur notre site implique l'acceptation pleine et entière des présentes CGV.</p>
@@ -262,7 +263,7 @@ export function TermsPage() {
           <p>Toute commande est validée via WhatsApp. Après avoir rempli le formulaire de commande, WhatsApp s'ouvre automatiquement avec un message pré-rempli contenant tous les détails de votre commande. Vous devez appuyer sur "Envoyer" pour confirmer votre commande.</p>
           
           <h2>5. Prix</h2>
-          <p>Les prix sont indiqués en FCFA. Laissa se réserve le droit de modifier ses prix à tout moment mais le produit sera facturé sur la base du tarif en vigueur au moment de la validation de la commande.</p>
+          <p>Les prix sont indiqués en FCFA. Dar Al Hayaa se réserve le droit de modifier ses prix à tout moment mais le produit sera facturé sur la base du tarif en vigueur au moment de la validation de la commande.</p>
           
           <h2>6. Paiement</h2>
           <p>Le paiement s'effectue à la livraison. Le client paie en espèces ou via mobile money selon accord avec le livreur lors de la remise du colis.</p>
@@ -280,7 +281,7 @@ export function TermsPage() {
           <p>Tous nos produits bénéficient de la garantie légale de conformité. En cas de défaut, vous pouvez demander le remplacement ou le remboursement du produit.</p>
           
           <h2>11. Contact</h2>
-          <p>Pour toute question relative aux CGV : contact@laissa.com ou 05 03 74 43 36</p>
+          <p>Pour toute question relative aux CGV : contact@daralhayaa.com ou 05 03 74 43 36</p>
         </div>
       </div>
     </>
@@ -290,7 +291,7 @@ export function TermsPage() {
 export function ShippingPage() {
   return (
     <>
-      <Helmet><title>Politique de Livraison — Laissa</title></Helmet>
+      <Helmet><title>Politique de Livraison — Dar Al Hayaa</title></Helmet>
       <div className={styles.pageHero}>
         <div className="container">
           <h1 className={styles.heroTitle}>Politique de Livraison</h1>
@@ -331,7 +332,7 @@ export function ShippingPage() {
           <p>En cas de produit non conforme ou défectueux, contactez-nous dans les 48h suivant la réception via WhatsApp. Nous organiserons le retour et l'échange.</p>
           
           <h2>8. Contact</h2>
-          <p>Pour toute question relative à la livraison : contact@laissa.com ou 05 03 74 43 36</p>
+          <p>Pour toute question relative à la livraison : contact@daralhayaa.com ou 05 03 74 43 36</p>
         </div>
       </div>
     </>

@@ -78,13 +78,13 @@ export default function Footer() {
               <div className={styles.logo}>
                 <div className={styles.logoIcon}>🌙</div>
                 <div>
-                  <div className={styles.logoName}>Laissa</div>
-                  <div className={styles.logoTagline}>Mode & Accessoires</div>
+                  <div className={styles.logoName}>Dar Al Hayaa</div>
+                  <div className={styles.logoTagline}>Mode Islamique Premium</div>
                 </div>
               </div>
               <p className={styles.brandDesc}>
-                Laissa est votre destination pour la mode et accessoires : 
-                vêtements de qualité, livraison rapide et service client personnalisé.
+                Dar Al Hayaa est votre destination haut de gamme pour la mode islamique : 
+                vêtements pudiques, accessoires, beauté halal et électronique de qualité.
               </p>
 
               <div className={styles.socials}>
@@ -119,7 +119,7 @@ export default function Footer() {
               <div className={styles.contact}>
                 <h3 className={styles.colTitle} style={{ marginTop: '1.5rem' }}>Contact</h3>
                 <div className={styles.contactItem}><Phone size={13} /> 05 03 74 43 36</div>
-                <div className={styles.contactItem}><Mail size={13} /> contact@laissa.com</div>
+                <div className={styles.contactItem}><Mail size={13} /> contact@daralhayaa.com</div>
                 <div className={styles.contactItem}><MapPin size={13} /> Abidjan, Côte d'Ivoire</div>
               </div>
             </div>
@@ -140,8 +140,8 @@ export default function Footer() {
       <div className={styles.bottom}>
         <div className="container">
           <div className={styles.bottomInner}>
-            <span>© 2025 Laissa. Tous droits réservés.</span>
-            <span>Fait avec ❤️ pour nos clients</span>
+            <span>© 2025 Dar Al Hayaa. Tous droits réservés.</span>
+            <span>Fait avec ❤️ pour la communauté musulmane</span>
           </div>
         </div>
       </div>
