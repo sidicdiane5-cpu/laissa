@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, ArrowRight, Star } from 'lucide-react';
+import { Mail, Phone, MapPin, ArrowRight } from 'lucide-react';
 import styles from './Footer.module.css';
 
 const FOOTER_LINKS = {
@@ -13,7 +13,6 @@ const FOOTER_LINKS = {
     { label: 'Nouveautés', to: '/nouveautes' },
   ],
   aide: [
-    { label: 'Suivi de commande', to: '/suivi-commande' },
     { label: 'FAQ', to: '/faq' },
     { label: 'Politique de retour', to: '/retours' },
     { label: 'Livraison', to: '/livraison' },
@@ -79,21 +78,15 @@ export default function Footer() {
               <div className={styles.logo}>
                 <div className={styles.logoIcon}>🌙</div>
                 <div>
-                  <div className={styles.logoName}>Dar Al Hayaa</div>
-                  <div className={styles.logoTagline}>Mode Islamique Premium</div>
+                  <div className={styles.logoName}>Laissa</div>
+                  <div className={styles.logoTagline}>Mode & Accessoires</div>
                 </div>
               </div>
               <p className={styles.brandDesc}>
-                Dar Al Hayaa est votre destination haut de gamme pour la mode islamique : 
-                vêtements pudiques, accessoires, beauté halal et électronique de qualité.
+                Laissa est votre destination pour la mode et accessoires : 
+                vêtements de qualité, livraison rapide et service client personnalisé.
               </p>
-              <div className={styles.trust}>
-                <div className={styles.trustItem}>
-                  <Star size={14} fill="var(--gold)" color="var(--gold)" />
-                  <span className={styles.trustRating}>4.9/5</span>
-                  <span className={styles.trustLabel}>· +2400 avis vérifiés</span>
-                </div>
-              </div>
+
               <div className={styles.socials}>
                 <a href="#" className={styles.social} aria-label="Facebook">FB</a>
                 <a href="#" className={styles.social} aria-label="Instagram">IG</a>
@@ -126,18 +119,15 @@ export default function Footer() {
               <div className={styles.contact}>
                 <h3 className={styles.colTitle} style={{ marginTop: '1.5rem' }}>Contact</h3>
                 <div className={styles.contactItem}><Phone size={13} /> 05 03 74 43 36</div>
-                <div className={styles.contactItem}><Mail size={13} /> contact@daralhayaa.com</div>
+                <div className={styles.contactItem}><Mail size={13} /> contact@laissa.com</div>
                 <div className={styles.contactItem}><MapPin size={13} /> Abidjan, Côte d'Ivoire</div>
               </div>
             </div>
           </div>
 
-          {/* Payment & Certifications */}
+          {/* Certifications */}
           <div className={styles.payments}>
             <div className={styles.paymentBadges}>
-              <span className={styles.payBadge}>💳 Visa</span>
-              <span className={styles.payBadge}>💳 Mastercard</span>
-              <span className={styles.payBadge}>🅿️ PayPal</span>
               <span className={styles.payBadge}>💵 Livraison</span>
               <span className={styles.payBadge}>🔒 SSL Sécurisé</span>
               <span className={styles.payBadge}>✅ Halal Certifié</span>
@@ -150,8 +140,8 @@ export default function Footer() {
       <div className={styles.bottom}>
         <div className="container">
           <div className={styles.bottomInner}>
-            <span>© 2025 Dar Al Hayaa. Tous droits réservés.</span>
-            <span>Fait avec ❤️ pour la communauté musulmane</span>
+            <span>© 2025 Laissa. Tous droits réservés.</span>
+            <span>Fait avec ❤️ pour nos clients</span>
           </div>
         </div>
       </div>

@@ -111,7 +111,7 @@ export default function Header() {
           <div className={`${s.topBarContent} container`}>
             <div className={s.topBarLeft}>
               <span><Phone size={11} /> 05 03 74 43 36</span>
-              <span><Mail size={11} /> contact@daralhayaa.com</span>
+              <span><Mail size={11} /> contact@laissa.com</span>
               <span><MapPin size={11} /> Livraison partout en Côte d'Ivoire</span>
             </div>
             <div className={s.topBarRight}>
@@ -128,8 +128,8 @@ export default function Header() {
             <Link to="/" className={s.logo}>
               <div className={s.logoIcon}>🌙</div>
               <div className={s.logoText}>
-                <span className={s.logoName}>Dar Al Hayaa</span>
-                <span className={s.logoTagline}>Mode Islamique Premium</span>
+                <span className={s.logoName}>Laissa</span>
+                <span className={s.logoTagline}>Mode & Accessoires</span>
               </div>
             </Link>
 

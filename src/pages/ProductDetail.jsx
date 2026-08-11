@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import {
-  Star, ShoppingBag, ChevronRight, ZoomIn,
+  ShoppingBag, ChevronRight, ZoomIn,
   Truck, RotateCcw, Shield, Minus, Plus, CheckCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -22,22 +22,9 @@ export default function ProductDetail() {
   const [qty, setQty] = useState(1);
   const [zoomed, setZoomed] = useState(false);
   const [zoomPos, setZoomPos] = useState({ x: 0, y: 0 });
-  const [reviews, setReviews] = useState([]);
 
   const addItem = useCartStore((s) => s.addItem);
   const openCart = useCartStore((s) => s.openCart);
-
-  // Charger les avis depuis les données mock
-  useEffect(() => {
-    const loadReviews = async () => {
-      const { REVIEWS } = await import('../data/products.js');
-      setReviews(REVIEWS.filter(r => r.product === product?.name));
-    };
-
-    if (product) {
-      loadReviews();
-    }
-  }, [id, product]);
 
   if (!product) {
     return (
@@ -162,20 +149,6 @@ export default function ProductDetail() {
 
             {/* Name */}
             <h1 className={styles.infoName}>{product.name}</h1>
-
-            {/* Rating */}
-            <div className={styles.infoRating}>
-              <div className={styles.stars}>
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={16}
-                    fill={i < Math.floor(product.rating) ? 'var(--gold)' : 'transparent'}
-                    color={i < Math.floor(product.rating) ? 'var(--gold)' : 'var(--gray-300)'}
-                  />
-                ))}
-              </div>
-              <span className={styles.ratingScore}>{product.rating}</span>
-              <span className={styles.ratingCount}>({product.reviews} avis)</span>
-            </div>
 
             {/* Price */}
             <div className={styles.priceBlock}>

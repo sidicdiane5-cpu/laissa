@@ -1,10 +1,10 @@
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Star, Truck, Shield, RefreshCw, Award, PhoneCall } from 'lucide-react';
+import { ArrowRight, Truck, Shield, RefreshCw, Award, PhoneCall } from 'lucide-react';
 import HeroCarousel from '../components/home/HeroCarousel';
 import ProductCard from '../components/product/ProductCard';
-import { PRODUCTS, CATEGORIES, REVIEWS } from '../data/products';
+import { PRODUCTS, CATEGORIES } from '../data/products';
 import styles from './Home.module.css';
 
 // Section apparition au scroll
@@ -213,83 +213,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Reviews */}
-      <section className="section">
-        <div className="container">
-          <FadeInSection>
-            <div className="section-header">
-              <span className="section-tag">Ce qu'ils disent</span>
-              <h2 className="section-title">Avis de nos <span className="gold-text">Clients</span></h2>
-              <div className="gold-line" />
-              <div className={styles.overallRating}>
-                <div className={styles.overallStars}>
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={20} fill="var(--gold)" color="var(--gold)" />
-                  ))}
-                </div>
-                <span className={styles.overallScore}>4.9/5</span>
-                <span className={styles.overallCount}>basé sur +2400 avis vérifiés</span>
-              </div>
-            </div>
-          </FadeInSection>
-
-          <div className={styles.reviewsGrid}>
-            {REVIEWS.map((r, i) => (
-              <FadeInSection key={r.id} delay={i * 0.08}>
-                <div className={styles.reviewCard}>
-                  <div className={styles.reviewHeader}>
-                    <div className={styles.reviewAvatar}>{r.avatar}</div>
-                    <div>
-                      <div className={styles.reviewName}>
-                        {r.name}
-                        {r.verified && <span className={styles.verifiedBadge}>✓ Vérifié</span>}
-                      </div>
-                      <div className={styles.reviewProduct}>{r.product}</div>
-                    </div>
-                    <div className={styles.reviewStars}>
-                      {[...Array(r.rating)].map((_, j) => (
-                        <Star key={j} size={13} fill="var(--gold)" color="var(--gold)" />
-                      ))}
-                    </div>
-                  </div>
-                  <p className={styles.reviewText}>"{r.text}"</p>
-                  <div className={styles.reviewDate}>
-                    {new Date(r.date).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}
-                  </div>
-                </div>
-              </FadeInSection>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Final */}
-      <FadeInSection>
-        <section className={styles.ctaSection}>
-          <div className="container">
-            <div className={styles.ctaInner}>
-              <div className={styles.ctaBg} />
-              <div className={styles.ctaContent}>
-                <span className="section-tag">Rejoignez-nous</span>
-                <h2 className={styles.ctaTitle}>
-                  Plus de <span className={styles.ctaGold}>15 000</span> familles<br />nous font confiance
-                </h2>
-                <p className={styles.ctaDesc}>
-                  Créez votre compte et profitez d'avantages exclusifs : réductions personnalisées, accès prioritaire aux soldes et bien plus.
-                </p>
-                <div className={styles.ctaBtns}>
-                  <Link to="/inscription" className={styles.ctaBtnPrimary}>
-                    Créer un compte gratuit <ArrowRight size={18} />
-                  </Link>
-                  <Link to="/boutique" className={styles.ctaBtnSecondary}>
-                    Explorer la boutique
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </FadeInSection>
     </>
   );
 }
