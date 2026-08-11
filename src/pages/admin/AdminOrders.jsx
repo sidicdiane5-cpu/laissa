@@ -17,10 +17,13 @@ export default function AdminOrders() {
   const fetchOrders = async () => {
     try {
       setLoading(true);
+      console.log('🔍 Début fetchOrders');
       const data = await getOrders();
+      console.log('📦 Données reçues:', data);
       setOrders(data);
+      console.log('✅ Orders state mis à jour:', data);
     } catch (error) {
-      console.error('Error fetching orders:', error);
+      console.error('❌ Error fetching orders:', error);
     } finally {
       setLoading(false);
     }

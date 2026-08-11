@@ -17,10 +17,13 @@ export default function AdminPromotions() {
   const fetchCoupons = async () => {
     try {
       setLoading(true);
+      console.log('🔍 Début fetchCoupons');
       const data = await getCoupons();
+      console.log('📦 Données reçues:', data);
       setCoupons(data);
+      console.log('✅ Coupons state mis à jour:', data);
     } catch (error) {
-      console.error('Error fetching coupons:', error);
+      console.error('❌ Error fetching coupons:', error);
     } finally {
       setLoading(false);
     }

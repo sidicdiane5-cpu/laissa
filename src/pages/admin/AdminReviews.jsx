@@ -16,10 +16,13 @@ export default function AdminReviews() {
   const fetchReviews = async () => {
     try {
       setLoading(true);
+      console.log('🔍 Début fetchReviews');
       const data = await getAllReviews();
+      console.log('📦 Données reçues:', data);
       setReviews(data);
+      console.log('✅ Reviews state mis à jour:', data);
     } catch (error) {
-      console.error('Error fetching reviews:', error);
+      console.error('❌ Error fetching reviews:', error);
     } finally {
       setLoading(false);
     }

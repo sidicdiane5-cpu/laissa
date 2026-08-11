@@ -15,10 +15,13 @@ export default function AdminStock() {
   const fetchProducts = async () => {
     try {
       setLoading(true);
+      console.log('🔍 Début fetchProducts');
       const data = await getProducts();
+      console.log('📦 Données reçues:', data);
       setProducts(data);
+      console.log('✅ Products state mis à jour:', data);
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error('❌ Error fetching products:', error);
     } finally {
       setLoading(false);
     }
