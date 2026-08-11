@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from 'react-hot-toast';
 import { useEffect } from 'react';
@@ -14,26 +14,9 @@ import Home from './pages/Home';
 import Shop from './pages/Shop';
 import ProductDetail from './pages/ProductDetail';
 import CheckoutPage from './pages/Checkout';
-import Login from './pages/auth/Login';
-import Register from './pages/auth/Register';
-import ForgotPassword from './pages/auth/ForgotPassword';
-import ResetPassword from './pages/auth/ResetPassword';
-import Dashboard from './pages/client/Dashboard';
-import AdminLayout from './pages/admin/AdminLayout';
-import AdminDashboard from './pages/admin/AdminDashboard';
-import AdminProducts from './pages/admin/AdminProducts';
-import AdminOrders from './pages/admin/AdminOrders';
-import AdminCustomers from './pages/admin/AdminCustomers';
-import AdminStock from './pages/admin/AdminStock';
-import AdminReviews from './pages/admin/AdminReviews';
-import AdminPromotions from './pages/admin/AdminPromotions';
-import AdminSettings from './pages/admin/AdminSettings';
-import AdminLogin from './pages/admin/AdminLogin';
-import Forbidden from './pages/Forbidden';
-import { AccountPage, WishlistPage } from './pages/Account';
 import { 
   ContactPage, FAQPage, AboutPage, 
-  PrivacyPage, TermsPage, ShippingPage, OrderTrackingPage 
+  PrivacyPage, TermsPage, ShippingPage 
 } from './pages/Pages';
 import { 
   WomenPage, MenPage, BeautyPage, 
@@ -45,8 +28,7 @@ import {
   CuisinePage, AudioPage, MontresPage,
   IslamPage, ChaussettesPage, GantsPage
 } from './pages/CategoryPages';
-import { useAuthStore } from './store/authStore';
-import { useWishlistStore } from './store/wishlistStore';
+
 
 // ScrollToTop component
 const ScrollToTop = () => {
@@ -57,58 +39,9 @@ const ScrollToTop = () => {
   return null;
 };
 
-// Ecran d'attente pendant la restauration de la session Supabase
-const AuthLoading = () => (
-  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
-    <p style={{ color: 'var(--gray-500)' }}>Chargement…</p>
-  </div>
-);
 
-// Protected Route component for admin routes
-const ProtectedAdminRoute = ({ children }) => {
-  const { isAuthenticated, user, isInitializing } = useAuthStore();
-
-  // Tant que la session Supabase n'est pas restauree, on ne redirige pas :
-  // sinon un admin deja connecte serait renvoye vers /admin a chaque refresh.
-  if (isInitializing) {
-    return <AuthLoading />;
-  }
-
-  if (!isAuthenticated) {
-    return <Navigate to="/admin" replace />;
-  }
-
-  // Debug logging
-  console.log('[ProtectedAdminRoute] User:', user);
-  console.log('[ProtectedAdminRoute] User role:', user?.role);
-  console.log('[ProtectedAdminRoute] User email:', user?.email);
-  console.log('[ProtectedAdminRoute] Is admin/manager:', user?.role === 'admin' || user?.role === 'manager');
-
-  // Permettre l'accès si le rôle est admin ou manager, OU si l'email est admin@daralhayaa.com
-  // (contournement temporaire pour permettre l'accès admin)
-  const isAdminEmail = user?.email === 'admin@daralhayaa.com';
-  const hasAdminRole = user?.role === 'admin' || user?.role === 'manager';
-  
-  if (!user || (!hasAdminRole && !isAdminEmail)) {
-    console.log('[ProtectedAdminRoute] Access denied - redirecting to /forbidden');
-    return <Navigate to="/forbidden" replace />;
-  }
-
-  return children;
-};
-
-// Layout component to hide Header/Footer on specific routes (like Admin)
+// Layout component
 const Layout = ({ children }) => {
-  const { pathname } = useLocation();
-  const isAdmin = pathname.startsWith('/admin') && pathname !== '/admin';
-  const isAuth = ['/login', '/register', '/forgot-password', '/reset-password'].includes(pathname);
-  const isAdminLogin = pathname === '/admin';
-  const isForbidden = pathname === '/forbidden';
-
-  if (isAdmin || isAuth || isAdminLogin || isForbidden) {
-    return children;
-  }
-
   return (
     <>
       <Header />
@@ -123,25 +56,6 @@ const Layout = ({ children }) => {
 };
 
 export default function App() {
-  const checkAuth = useAuthStore((state) => state.checkAuth);
-  const userId = useAuthStore((state) => state.user?.id);
-  const setWishlistUserId = useWishlistStore((state) => state.setUserId);
-  const loadFavorites = useWishlistStore((state) => state.loadFavorites);
-
-  // Restaure la session Supabase au chargement de l'application.
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
-
-  // Synchronise les favoris avec le compte connecte.
-  useEffect(() => {
-    if (userId) {
-      loadFavorites(userId);
-    } else {
-      setWishlistUserId(null);
-    }
-  }, [userId, loadFavorites, setWishlistUserId]);
-
   return (
     <HelmetProvider>
       <Router>
@@ -154,14 +68,6 @@ export default function App() {
             <Route path="/boutique" element={<Shop />} />
             <Route path="/produit/:id" element={<ProductDetail />} />
             <Route path="/paiement" element={<CheckoutPage />} />
-            
-            {/* Auth & Account */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/compte" element={<Dashboard />} />
-            <Route path="/favoris" element={<WishlistPage />} />
             
             {/* Categories */}
             <Route path="/femmes" element={<WomenPage />} />
@@ -211,53 +117,6 @@ export default function App() {
             <Route path="/mentions-legales" element={<TermsPage />} />
             <Route path="/livraison" element={<ShippingPage />} />
             <Route path="/retours" element={<ShippingPage />} />
-            <Route path="/suivi-commande" element={<OrderTrackingPage />} />
-            
-            {/* Admin */}
-            <Route path="/admin" element={<AdminLogin />} />
-            <Route path="/admin/dashboard" element={
-              <ProtectedAdminRoute>
-                <AdminLayout><AdminDashboard /></AdminLayout>
-              </ProtectedAdminRoute>
-            } />
-            <Route path="/admin/products" element={
-              <ProtectedAdminRoute>
-                <AdminLayout><AdminProducts /></AdminLayout>
-              </ProtectedAdminRoute>
-            } />
-            <Route path="/admin/orders" element={
-              <ProtectedAdminRoute>
-                <AdminLayout><AdminOrders /></AdminLayout>
-              </ProtectedAdminRoute>
-            } />
-            <Route path="/admin/customers" element={
-              <ProtectedAdminRoute>
-                <AdminLayout><AdminCustomers /></AdminLayout>
-              </ProtectedAdminRoute>
-            } />
-            <Route path="/admin/stock" element={
-              <ProtectedAdminRoute>
-                <AdminLayout><AdminStock /></AdminLayout>
-              </ProtectedAdminRoute>
-            } />
-            <Route path="/admin/reviews" element={
-              <ProtectedAdminRoute>
-                <AdminLayout><AdminReviews /></AdminLayout>
-              </ProtectedAdminRoute>
-            } />
-            <Route path="/admin/promotions" element={
-              <ProtectedAdminRoute>
-                <AdminLayout><AdminPromotions /></AdminLayout>
-              </ProtectedAdminRoute>
-            } />
-            <Route path="/admin/settings" element={
-              <ProtectedAdminRoute>
-                <AdminLayout><AdminSettings /></AdminLayout>
-              </ProtectedAdminRoute>
-            } />
-            
-            {/* 403 Forbidden */}
-            <Route path="/forbidden" element={<Forbidden />} />
             
             {/* 404 */}
             <Route path="*" element={

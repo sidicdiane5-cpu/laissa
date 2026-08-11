@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Heart, ShoppingBag, Star, Eye, Zap } from 'lucide-react';
+import { ShoppingBag, Star, Eye, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useCartStore } from '../../store/cartStore';
-import { useWishlistStore } from '../../store/wishlistStore';
 import toast from 'react-hot-toast';
 import styles from './ProductCard.module.css';
 
@@ -12,11 +11,7 @@ export default function ProductCard({ product, index = 0 }) {
   const [imgIdx, setImgIdx] = useState(0);
   const addItem = useCartStore((s) => s.addItem);
   const openCart = useCartStore((s) => s.openCart);
-  const toggleItem = useWishlistStore((s) => s.toggleItem);
-  const isInWishlist = useWishlistStore((s) => s.isInWishlist);
   const navigate = useNavigate();
-
-  const inWish = isInWishlist(product.id);
 
   const handleAddToCart = (e) => {
     e.preventDefault();
@@ -26,15 +21,6 @@ export default function ProductCard({ product, index = 0 }) {
     toast.success(`${product.name} ajouté au panier ! 🛍️`, {
       style: { background: 'var(--navy)', color: 'var(--off-white)', border: '1px solid var(--gold)' },
       iconTheme: { primary: 'var(--gold)', secondary: 'var(--navy)' },
-    });
-  };
-
-  const handleWishlist = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const added = toggleItem(product);
-    toast(added ? `Ajouté aux favoris ❤️` : `Retiré des favoris`, {
-      style: { background: 'var(--navy)', color: 'var(--off-white)', border: '1px solid var(--gold)' },
     });
   };
 
@@ -71,13 +57,6 @@ export default function ProductCard({ product, index = 0 }) {
 
           {/* Actions */}
           <div className={`${styles.actions} ${hovered ? styles.actionsVisible : ''}`}>
-            <button
-              className={`${styles.action} ${inWish ? styles.actionActive : ''}`}
-              onClick={handleWishlist}
-              aria-label="Ajouter aux favoris"
-            >
-              <Heart size={16} fill={inWish ? 'currentColor' : 'none'} />
-            </button>
             <Link
               to={`/produit/${product.id}`}
               className={styles.action}

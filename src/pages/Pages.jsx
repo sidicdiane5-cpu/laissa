@@ -1,9 +1,9 @@
 import { Helmet } from 'react-helmet-async';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react';
 import { FAQ_ITEMS } from '../data/products';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styles from './Pages.module.css';
 
 // ── Contact Page ──
@@ -265,19 +265,14 @@ export function TermsPage() {
           <p>Les produits proposés à la vente sont décrits et présentés avec la plus grande précision possible. Cependant, si des erreurs ou omissions ont pu se produire, notre responsabilité ne pourra être engagée. Les photos sont contractuelles mais la couleur peut varier légèrement selon votre écran.</p>
           
           <h2>4. Commandes</h2>
-          <p>Toute commande validée par le client ne sera considérée comme définitive qu'après confirmation du paiement. Une confirmation de commande sera envoyée par email à l'adresse fournie par le client.</p>
+          <p>Toute commande est validée via WhatsApp. Après avoir rempli le formulaire de commande, WhatsApp s'ouvre automatiquement avec un message pré-rempli contenant tous les détails de votre commande. Vous devez appuyer sur "Envoyer" pour confirmer votre commande.</p>
           
           <h2>5. Prix</h2>
           <p>Les prix sont indiqués en euros TTC (toutes taxes comprises). Dar Al Hayaa se réserve le droit de modifier ses prix à tout moment mais le produit sera facturé sur la base du tarif en vigueur au moment de la validation de la commande.</p>
           
           <h2>6. Paiement</h2>
-          <p>Le paiement est exigible immédiatement à la commande. Nous acceptons les moyens de paiement suivants :</p>
-          <ul>
-            <li>Orange Money</li>
-            <li>MTN Money</li>
-            <li>Wave</li>
-          </ul>
-          <p>Les transactions sont sécurisées via SSL. Dar Al Hayaa ne stocke jamais vos informations bancaires complètes.</p>
+          <p>Le paiement s'effectue à la livraison. Toutes les commandes sont validées via WhatsApp pour assurer un suivi personnalisé. Le client reçoit les détails de sa commande sur WhatsApp et confirme les informations de livraison.</p>
+          <p><strong>Mode de paiement :</strong> Paiement à la livraison en espèces ou via mobile money selon accord avec le livreur.</p>
           
           <h2>7. Livraison</h2>
           <p>Les produits sont livrés à l'adresse indiquée par le client lors de la commande. Les délais de livraison sont de 3 à 5 jours ouvrables pour la Côte d'Ivoire. La livraison est gratuite dès 80€ d'achat, sinon 5.99€.</p>
@@ -364,114 +359,6 @@ export function ShippingPage() {
           <h2>9. Contact</h2>
           <p>Pour toute question relative à la livraison : contact@daralhayaa.com ou 05 03 74 43 36</p>
         </div>
-      </div>
-    </>
-  );
-}
-
-export function OrderTrackingPage() {
-  const [trackingId, setTrackingId] = useState('');
-  const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const location = useLocation();
-
-  // Pré-remplir si on vient du checkout
-  useEffect(() => {
-    if (location.state?.trackingId) {
-      setTrackingId(location.state.trackingId);
-    }
-  }, [location.state]);
-
-  const handleTrack = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const response = await fetch(`http://localhost:3001/api/orders/tracking/${trackingId}`);
-      const data = await response.json();
-      
-      if (response.ok) {
-        setResult(data);
-      } else {
-        setError(data.error || 'Commande non trouvée');
-      }
-    } catch (err) {
-      setError('Erreur de connexion au serveur');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <>
-      <Helmet><title>Suivi de Commande — Dar Al Hayaa</title></Helmet>
-      <div className={styles.pageHero}>
-        <div className="container">
-          <span className="section-tag">Tracking</span>
-          <h1 className={styles.heroTitle}>Suivi de Commande</h1>
-        </div>
-      </div>
-      <div className="container-sm section">
-        <form className={styles.trackForm} onSubmit={handleTrack}>
-          <input
-            type="text"
-            className={styles.trackInput}
-            placeholder="Entrez votre numéro de commande (ex: ORD-1234567890)"
-            value={trackingId}
-            onChange={(e) => setTrackingId(e.target.value)}
-            required
-          />
-          <button type="submit" className={styles.trackBtn} disabled={loading}>
-            {loading ? 'Recherche...' : 'Rechercher'}
-          </button>
-        </form>
-
-        {error && (
-          <div style={{ 
-            background: '#fee', 
-            color: '#c33', 
-            padding: '16px', 
-            borderRadius: '8px', 
-            marginTop: '24px',
-            textAlign: 'center'
-          }}>
-            {error}
-          </div>
-        )}
-
-        {result && (
-          <motion.div
-            className={styles.trackResult}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <div className={styles.trackHeader}>
-              <div>
-                <div className={styles.trackId}>Commande {result.id}</div>
-                <div className={styles.trackStatus}>📦 {result.status}</div>
-                {result.tracking_number && (
-                  <div style={{ fontSize: '0.875rem', color: 'var(--gray-500)', marginTop: '4px' }}>
-                    Numéro de suivi : {result.tracking_number}
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className={styles.trackSteps}>
-              {result.steps.map((step, i) => (
-                <div key={i} className={`${styles.step} ${step.done ? styles.stepDone : ''}`}>
-                  <div className={styles.stepDot} />
-                  {i < result.steps.length - 1 && <div className={styles.stepLine} />}
-                  <div className={styles.stepInfo}>
-                    <div className={styles.stepLabel}>{step.label}</div>
-                    <div className={styles.stepDate}>{step.date}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        )}
       </div>
     </>
   );

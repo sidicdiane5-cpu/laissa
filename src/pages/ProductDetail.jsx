@@ -2,13 +2,12 @@ import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import {
-  Star, Heart, ShoppingBag, Share2, ChevronRight, ZoomIn,
+  Star, ShoppingBag, ChevronRight, ZoomIn,
   Truck, RotateCcw, Shield, Minus, Plus, CheckCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PRODUCTS } from '../data/products';
 import { useCartStore } from '../store/cartStore';
-import { useWishlistStore } from '../store/wishlistStore';
 import ProductCard from '../components/product/ProductCard';
 import toast from 'react-hot-toast';
 import styles from './ProductDetail.module.css';
@@ -24,31 +23,15 @@ export default function ProductDetail() {
   const [zoomed, setZoomed] = useState(false);
   const [zoomPos, setZoomPos] = useState({ x: 0, y: 0 });
   const [reviews, setReviews] = useState([]);
-  const [newReview, setNewReview] = useState({ rating: 5, comment: '' });
 
   const addItem = useCartStore((s) => s.addItem);
   const openCart = useCartStore((s) => s.openCart);
-  const toggleItem = useWishlistStore((s) => s.toggleItem);
-  const isInWishlist = useWishlistStore((s) => s.isInWishlist);
 
-  // Charger les avis depuis la base de données
+  // Charger les avis depuis les données mock
   useEffect(() => {
     const loadReviews = async () => {
-      try {
-        const response = await fetch(`http://localhost:3001/api/reviews/product/${id}`);
-        const data = await response.json();
-        if (data.length > 0) {
-          setReviews(data);
-        } else {
-          // Fallback aux avis mock si aucun avis dans la BD
-          const { REVIEWS } = await import('../data/products.js');
-          setReviews(REVIEWS.filter(r => r.product === product?.name));
-        }
-      } catch (error) {
-        // Fallback aux avis mock en cas d'erreur
-        const { REVIEWS } = await import('../data/products.js');
-        setReviews(REVIEWS.filter(r => r.product === product?.name));
-      }
+      const { REVIEWS } = await import('../data/products.js');
+      setReviews(REVIEWS.filter(r => r.product === product?.name));
     };
 
     if (product) {
@@ -68,35 +51,6 @@ export default function ProductDetail() {
   const related = PRODUCTS.filter(
     (p) => p.category === product.category && p.id !== product.id
   ).slice(0, 4);
-
-  const inWish = isInWishlist(product.id);
-
-  const handleSubmitReview = async (e) => {
-    e.preventDefault();
-    
-    try {
-      const response = await fetch('http://localhost:3001/api/reviews', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: 'guest', // À remplacer par l'ID utilisateur réel quand l'auth sera intégrée
-          product_id: id,
-          rating: newReview.rating,
-          comment: newReview.comment,
-          verified: false
-        })
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        setReviews([...reviews, data.review]);
-        setNewReview({ rating: 5, comment: '' });
-        toast.success('Avis ajouté avec succès !');
-      }
-    } catch (error) {
-      toast.error('Erreur lors de l\'ajout de l\'avis');
-    }
-  };
 
   const handleAddToCart = () => {
     if (product.sizes.length > 1 && !selectedSize) {
@@ -314,18 +268,6 @@ export default function ProductDetail() {
               >
                 <ShoppingBag size={20} />
                 Ajouter au panier
-              </button>
-              <button
-                className={`${styles.wishBtn} ${inWish ? styles.wishBtnActive : ''}`}
-                onClick={() => {
-                  const added = toggleItem(product);
-                  toast(added ? 'Ajouté aux favoris ❤️' : 'Retiré des favoris', {
-                    style: { background: 'var(--navy)', color: 'var(--off-white)' },
-                  });
-                }}
-                aria-label="Favoris"
-              >
-                <Heart size={20} fill={inWish ? 'currentColor' : 'none'} />
               </button>
             </div>
 

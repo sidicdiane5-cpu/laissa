@@ -1,264 +1,232 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { motion } from 'framer-motion';
-import { Shield, Lock, CreditCard, ChevronLeft, ArrowRight, CheckCircle2, Phone } from 'lucide-react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { ChevronLeft, MessageCircle, ShoppingBag } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useCartStore } from '../store/cartStore';
-import { useAuthStore } from '../store/authStore';
-import toast from 'react-hot-toast';
 import styles from './Checkout.module.css';
 
-export default function CheckoutPage() {
-  const { items, getTotal, getSubtotal, getShipping, discount, getDiscount, clearCart, couponCode } = useCartStore();
-  const { isAuthenticated, user } = useAuthStore();
-  const [step, setStep] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState('orange');
-  const [orderData, setOrderData] = useState(null);
-  const navigate = useNavigate();
-  const location = useLocation();
+const IVORY_COAST_CITIES = [
+  'Abidjan', 'Bouaké', 'Yamoussoukro', 'Korhogo', 'San-Pédro', 
+  'Daloa', 'Man', 'Abengourou', 'Grand-Bassam', 'Bingerville',
+  'Gagnoa', 'Divo', 'Koumassi', 'Marcory', 'Plateau', 'Treichville',
+  'Cocody', 'Yopougon', 'Attécoubé', 'Abobo', 'Songon', 'Anyama'
+];
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      toast.error('Vous devez être connecté pour passer une commande');
-      navigate('/login', { state: { from: location.pathname } });
-    }
-  }, [isAuthenticated, navigate, location]);
+export default function CheckoutPage() {
+  const { items, getTotal, getSubtotal, getShipping, clearCart } = useCartStore();
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    fullName: '',
+    phone: '',
+    address: '',
+    city: '',
+    note: ''
+  });
+  const [citySearch, setCitySearch] = useState('');
+  const [showCitySuggestions, setShowCitySuggestions] = useState(false);
 
   const total = getTotal();
+  const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '2250503744336';
 
-  const handleNext = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    setOrderData({
-      firstName: formData.get('firstName'),
-      lastName: formData.get('lastName'),
-      email: formData.get('email'),
-      address: formData.get('address'),
-      postalCode: formData.get('postalCode'),
-      city: formData.get('city'),
-      phone: formData.get('phone')
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
     });
-    setStep(2);
   };
 
-  const handlePayment = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
+
+    // Générer l'ID de commande
+    const orderId = `#CI-${Date.now().toString().slice(-6)}`;
+
+    // Construire le message WhatsApp
+    let message = `🆕 *NOUVELLE COMMANDE*\n\n`;
+    message += `📋 *ID COMMANDE:* ${orderId}\n`;
+    message += `📍 *DESTINATION:* ${formData.city.toUpperCase()} / CI\n\n`;
+    message += `👤 *CLIENT*\n`;
+    message += `• Nom: ${formData.fullName}\n`;
+    message += `• Téléphone: ${formData.phone}\n`;
+    message += `• Adresse: ${formData.address}\n`;
+    message += `• Ville: ${formData.city}\n`;
+    message += `• Pays: Côte d'Ivoire\n\n`;
+    message += `🛒 *ARTICLES*\n`;
     
-    try {
-      // Simuler le paiement mobile
-      const paymentResponse = await fetch('http://localhost:3001/api/payments', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          order_id: 'pending',
-          method: paymentMethod,
-          amount: total,
-          status: 'completed',
-          transaction_id: `TXN-${Date.now()}`,
-          phone: orderData.phone
-        })
-      });
+    items.forEach((item, index) => {
+      message += `${index + 1}. ${item.name}\n`;
+      message += `   Quantité: ${item.quantity}\n`;
+      if (item.selectedSize) message += `   Taille: ${item.selectedSize}\n`;
+      if (item.selectedColor) message += `   Couleur: ${item.selectedColor}\n`;
+      message += `   Prix: ${(item.price * item.quantity).toLocaleString()} FCFA\n\n`;
+    });
 
-      const paymentData = await paymentResponse.json();
-      
-      if (!paymentResponse.ok) {
-        throw new Error('Erreur lors du paiement');
-      }
-
-      // Créer la commande via l'API
-      const response = await fetch('http://localhost:3001/api/orders', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: user?.id || null,
-          items: items,
-          total: total,
-          subtotal: getSubtotal(),
-          shipping: getShipping(),
-          discount: discount,
-          coupon_code: couponCode || null,
-          payment_method: paymentMethod,
-          shipping_address: orderData,
-          phone: orderData.phone,
-          email: orderData.email
-        })
-      });
-
-      const data = await response.json();
-      
-      if (response.ok) {
-        // Mettre à jour le paiement avec l'ID de commande
-        await fetch(`http://localhost:3001/api/payments/${paymentData.payment.id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ order_id: data.order_id })
-        });
-
-        setOrderData({ 
-          ...orderData, 
-          orderId: data.order_id, 
-          trackingNumber: data.tracking_number,
-          transactionId: paymentData.payment.transaction_id 
-        });
-        setLoading(false);
-        setSuccess(true);
-        clearCart();
-      } else {
-        throw new Error(data.error || 'Erreur lors de la commande');
-      }
-    } catch (error) {
-      setLoading(false);
-      console.error('Erreur:', error);
-      alert('Erreur lors de la commande: ' + error.message);
+    message += `💰 *TOTAL*\n`;
+    message += `• Sous-total: ${getSubtotal().toLocaleString()} FCFA\n`;
+    message += `• Livraison: ${getShipping() === 0 ? 'Gratuite' : getShipping().toLocaleString() + ' FCFA'}\n`;
+    message += `• *TOTAL: ${total.toLocaleString()} FCFA*\n\n`;
+    message += `💳 *PAIEMENT: À LA LIVRAISON*\n\n`;
+    
+    if (formData.note) {
+      message += `📝 *NOTE:* ${formData.note}\n`;
     }
+
+    // Encoder le message pour l'URL
+    const encodedMessage = encodeURIComponent(message);
+    
+    // Ouvrir WhatsApp avec le message pré-rempli
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
+
+    // Vider le panier et afficher le succès
+    clearCart();
+    setLoading(false);
   };
 
-  if (items.length === 0 && !success) {
+  const filteredCities = IVORY_COAST_CITIES.filter(city =>
+    city.toLowerCase().includes(citySearch.toLowerCase())
+  );
+
+  const handleCitySelect = (city) => {
+    setFormData({ ...formData, city });
+    setCitySearch(city);
+    setShowCitySuggestions(false);
+  };
+
+  if (items.length === 0) {
     return (
       <div className={styles.emptyWrap}>
+        <ShoppingBag size={48} style={{ marginBottom: '16px', color: 'var(--gray-400)' }} />
         <h2>Votre panier est vide</h2>
         <Link to="/boutique" className={styles.emptyBtn}>Retourner à la boutique</Link>
       </div>
     );
   }
 
-  if (success) {
-    return (
-      <div className={styles.successWrap}>
-        <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className={styles.successCard}>
-          <CheckCircle2 size={64} className={styles.successIcon} />
-          <h1>Commande confirmée !</h1>
-          <p>Merci pour votre achat. Votre numéro de commande est <strong>{orderData?.orderId || 'N/A'}</strong>.</p>
-          {orderData?.trackingNumber && (
-            <p>Numéro de suivi : <strong>{orderData.trackingNumber}</strong></p>
-          )}
-          <p>Un email de confirmation vous sera envoyé très bientôt.</p>
-          <div className={styles.successActions}>
-            <Link to="/suivi-commande" state={{ trackingId: orderData?.trackingNumber || orderData?.orderId }} className={styles.primaryBtn}>Suivre ma commande</Link>
-            <Link to="/" className={styles.secondaryBtn}>Retour à l'accueil</Link>
-          </div>
-        </motion.div>
-      </div>
-    );
-  }
-
   return (
     <>
-      <Helmet><title>Paiement Sécurisé — Dar Al Hayaa</title></Helmet>
+      <Helmet><title>Commander — Laissa</title></Helmet>
       
       <div className={styles.checkoutPage}>
         <div className="container">
           <div className={styles.header}>
             <Link to="/boutique" className={styles.backLink}><ChevronLeft size={16} /> Retour à la boutique</Link>
-            <div className={styles.secureBadge}><Shield size={16} /> Paiement 100% Sécurisé</div>
           </div>
           
           <div className={styles.layout}>
-            {/* Form Steps */}
+            {/* Formulaire */}
             <div className={styles.main}>
-              <div className={styles.steps}>
-                <div className={`${styles.step} ${step >= 1 ? styles.stepActive : ''}`}>1. Livraison</div>
-                <div className={styles.stepLine} />
-                <div className={`${styles.step} ${step >= 2 ? styles.stepActive : ''}`}>2. Paiement</div>
+              <div className={styles.infoBanner}>
+                <MessageCircle size={20} />
+                <span>Tes informations servent uniquement à préparer le message WhatsApp. Aucun paiement n'est demandé ici.</span>
               </div>
 
-              {step === 1 ? (
-                <form onSubmit={handleNext} className={styles.formCard}>
-                  <h2 className={styles.formTitle}>Adresse de Livraison</h2>
-                  
-                  <div className={styles.formRow}>
-                    <div className={styles.field}>
-                      <label className={styles.label}>Prénom</label>
-                      <input type="text" name="firstName" className={styles.input} required />
-                    </div>
-                    <div className={styles.field}>
-                      <label className={styles.label}>Nom de famille</label>
-                      <input type="text" name="lastName" className={styles.input} required />
-                    </div>
-                  </div>
-                  
-                  <div className={styles.field}>
-                    <label className={styles.label}>Adresse mail</label>
-                    <input type="email" name="email" className={styles.input} required />
-                  </div>
-                  
-                  <div className={styles.field}>
-                    <label className={styles.label}>Adresse</label>
-                    <input type="text" name="address" className={styles.input} placeholder="N° de rue, avenue..." required />
-                  </div>
-                  
-                  <div className={styles.formRow}>
-                    <div className={styles.field}>
-                      <label className={styles.label}>Code postal</label>
-                      <input type="text" name="postalCode" className={styles.input} required />
-                    </div>
-                    <div className={styles.field}>
-                      <label className={styles.label}>Ville</label>
-                      <input type="text" name="city" className={styles.input} required />
-                    </div>
-                  </div>
-                  
-                  <div className={styles.field}>
-                    <label className={styles.label}>Téléphone</label>
-                    <input type="tel" name="phone" className={styles.input} required />
-                  </div>
-                  
-                  <button type="submit" className={styles.nextBtn}>
-                    Passer au paiement <ArrowRight size={18} />
-                  </button>
-                </form>
-              ) : (
-                <form onSubmit={handlePayment} className={styles.formCard}>
-                  <h2 className={styles.formTitle}>Moyen de Paiement</h2>
-                  
-                  <div className={styles.paymentMethods} style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '24px' }}>
-                    <label className={`${styles.payMethod} ${paymentMethod === 'orange' ? styles.payMethodActive : ''}`} style={{ flexDirection: 'column', padding: '12px', border: paymentMethod === 'orange' ? '1px solid #FF6600' : '' }}>
-                      <input type="radio" name="payment" checked={paymentMethod === 'orange'} onChange={() => setPaymentMethod('orange')} className={styles.payRadio} style={{ display: 'none' }} />
-                      <div style={{ background: '#FF6600', color: 'white', padding: '8px', borderRadius: '8px', fontWeight: 'bold', fontSize: '0.8rem', width: '100%', textAlign: 'center' }}>Orange Money</div>
-                    </label>
-                    <label className={`${styles.payMethod} ${paymentMethod === 'mtn' ? styles.payMethodActive : ''}`} style={{ flexDirection: 'column', padding: '12px', border: paymentMethod === 'mtn' ? '1px solid #FFCC00' : '' }}>
-                      <input type="radio" name="payment" checked={paymentMethod === 'mtn'} onChange={() => setPaymentMethod('mtn')} className={styles.payRadio} style={{ display: 'none' }} />
-                      <div style={{ background: '#FFCC00', color: '#000', padding: '8px', borderRadius: '8px', fontWeight: 'bold', fontSize: '0.8rem', width: '100%', textAlign: 'center' }}>MTN Money</div>
-                    </label>
-                    <label className={`${styles.payMethod} ${paymentMethod === 'wave' ? styles.payMethodActive : ''}`} style={{ flexDirection: 'column', padding: '12px', border: paymentMethod === 'wave' ? '1px solid #1CBEFF' : '' }}>
-                      <input type="radio" name="payment" checked={paymentMethod === 'wave'} onChange={() => setPaymentMethod('wave')} className={styles.payRadio} style={{ display: 'none' }} />
-                      <div style={{ background: '#1CBEFF', color: 'white', padding: '8px', borderRadius: '8px', fontWeight: 'bold', fontSize: '0.8rem', width: '100%', textAlign: 'center' }}>Wave</div>
-                    </label>
-                  </div>
-                  
-                  <div className={styles.cardForm}>
-                    <div className={styles.field} style={{ marginBottom: 0 }}>
-                      <label className={styles.label}>Numéro de téléphone ({paymentMethod === 'wave' ? 'Wave' : paymentMethod === 'orange' ? 'Orange' : 'MTN'})</label>
-                      <div className={styles.inputWrap}>
-                        <Phone size={16} className={styles.inputIcon} />
-                        <input type="tel" className={styles.input} placeholder="Ex: 0500000000" maxLength="10" required />
+              <form onSubmit={handleSubmit} className={styles.formCard}>
+                <h2 className={styles.formTitle}>Tes coordonnées</h2>
+                
+                <div className={styles.field}>
+                  <label className={styles.label}>Nom complet</label>
+                  <input 
+                    type="text" 
+                    name="fullName" 
+                    className={styles.input} 
+                    value={formData.fullName}
+                    onChange={handleInputChange}
+                    required 
+                    placeholder="Ex: Diane Sidic"
+                  />
+                </div>
+                
+                <div className={styles.field}>
+                  <label className={styles.label}>Téléphone</label>
+                  <input 
+                    type="tel" 
+                    name="phone" 
+                    className={styles.input} 
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    required 
+                    placeholder="Ex: +2250503744336"
+                  />
+                </div>
+                
+                <div className={styles.field}>
+                  <label className={styles.label}>Adresse de livraison</label>
+                  <input 
+                    type="text" 
+                    name="address" 
+                    className={styles.input} 
+                    value={formData.address}
+                    onChange={handleInputChange}
+                    required 
+                    placeholder="Ex: Abidjan, Cocody, Rue 12"
+                  />
+                </div>
+                
+                <div className={styles.field}>
+                  <label className={styles.label}>Ville</label>
+                  <div className={styles.cityInputWrapper}>
+                    <input 
+                      type="text" 
+                      name="city" 
+                      className={styles.input} 
+                      value={citySearch}
+                      onChange={(e) => {
+                        setCitySearch(e.target.value);
+                        setFormData({ ...formData, city: e.target.value });
+                        setShowCitySuggestions(true);
+                      }}
+                      onFocus={() => setShowCitySuggestions(true)}
+                      onBlur={() => setTimeout(() => setShowCitySuggestions(false), 200)}
+                      required 
+                      placeholder="Rechercher ou taper votre ville..."
+                      autoComplete="off"
+                    />
+                    {showCitySuggestions && filteredCities.length > 0 && (
+                      <div className={styles.citySuggestions}>
+                        {filteredCities.map((city) => (
+                          <div
+                            key={city}
+                            className={styles.citySuggestion}
+                            onClick={() => handleCitySelect(city)}
+                          >
+                            {city}
+                          </div>
+                        ))}
                       </div>
-                      <p style={{ fontSize: '0.75rem', color: 'var(--gray-500)', marginTop: '12px' }}>
-                        Vous recevrez une notification sur votre téléphone pour valider le paiement sécurisé.
-                      </p>
-                    </div>
+                    )}
                   </div>
-                  
-                  <button type="submit" className={styles.payBtn} disabled={loading}>
-                    {loading ? <div className={styles.spinner} /> : `Payer ${total.toLocaleString()} FCFA`}
-                  </button>
-                  <button type="button" className={styles.backBtn} onClick={() => setStep(1)}>
-                    Retour à la livraison
-                  </button>
-                </form>
-              )}
+                </div>
+
+                <div className={styles.field}>
+                  <label className={styles.label}>Note (facultatif)</label>
+                  <textarea 
+                    name="note" 
+                    className={styles.textarea} 
+                    value={formData.note}
+                    onChange={handleInputChange}
+                    placeholder="Précisions sur la livraison..."
+                    rows={3}
+                  />
+                </div>
+                
+                <button type="submit" className={styles.whatsappBtn} disabled={loading}>
+                  {loading ? 'Préparation...' : (
+                    <>
+                      <MessageCircle size={20} />
+                      Commander sur WhatsApp
+                    </>
+                  )}
+                </button>
+                
+                <p className={styles.whatsappNote}>
+                  WhatsApp va s'ouvrir automatiquement. Appuie sur "Envoyer" pour valider ta commande.
+                </p>
+              </form>
             </div>
             
-            {/* Order Summary */}
+            {/* Résumé de commande */}
             <aside className={styles.summarySidebar}>
               <div className={styles.summaryCard}>
                 <h3 className={styles.summaryTitle}>Résumé de la commande</h3>
@@ -282,12 +250,6 @@ export default function CheckoutPage() {
                     <span>Sous-total</span>
                     <span>{getSubtotal().toLocaleString()} FCFA</span>
                   </div>
-                  {getDiscount() > 0 && (
-                    <div className={`${styles.totalRow} ${styles.totalDiscount}`}>
-                      <span>Réduction ({discount}%)</span>
-                      <span>-{getDiscount().toLocaleString()} FCFA</span>
-                    </div>
-                  )}
                   <div className={styles.totalRow}>
                     <span>Expédition</span>
                     <span>{getShipping() === 0 ? 'Gratuite' : `${getShipping().toLocaleString()} FCFA`}</span>
@@ -296,6 +258,11 @@ export default function CheckoutPage() {
                     <span>Total à payer</span>
                     <span className={styles.finalPrice}>{total.toLocaleString()} FCFA</span>
                   </div>
+                </div>
+
+                <div className={styles.paymentInfo}>
+                  <MessageCircle size={16} />
+                  <span>Livraison et paiement à confirmer sur WhatsApp</span>
                 </div>
               </div>
             </aside>

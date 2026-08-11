@@ -1,14 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import {
-  Search, ShoppingBag, Heart, User, Menu, X, ChevronDown,
-  Phone, Mail, MapPin, Star, LogOut
+  Search, ShoppingBag, Menu, X, ChevronDown,
+  Phone, Mail, MapPin
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore } from '../../store/cartStore';
-import { useWishlistStore } from '../../store/wishlistStore';
-import { useAuthStore } from '../../store/authStore';
-import { PRODUCTS, CATEGORIES } from '../../data/products';
+import { PRODUCTS } from '../../data/products';
 import s from './Header.module.css';
 
 const NAV_ITEMS = [
@@ -70,14 +68,11 @@ export default function Header() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const searchRef = useRef(null);
   const navigate = useNavigate();
 
   const cartCount = useCartStore((s) => s.getCount());
   const openCart = useCartStore((s) => s.openCart);
-  const wishCount = useWishlistStore((s) => s.getCount());
-  const { isAuthenticated, isAdmin, user, logout } = useAuthStore();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -106,11 +101,7 @@ export default function Header() {
     }
   };
 
-  const handleLogout = () => {
-    logout();
-    setUserMenuOpen(false);
-    navigate('/');
-  };
+
 
   return (
     <>
@@ -124,12 +115,7 @@ export default function Header() {
               <span><MapPin size={11} /> Livraison partout en Côte d'Ivoire</span>
             </div>
             <div className={s.topBarRight}>
-              <Link to="/suivi-commande">Suivre ma commande</Link>
-              {!isAuthenticated ? (
-                <Link to="/login" style={{ color: 'var(--gold)', fontWeight: 500 }}>Connexion</Link>
-              ) : (
-                <Link to="/compte" style={{ color: 'var(--gold)', fontWeight: 500 }}>Mon compte</Link>
-              )}
+              <Link to="/contact">Contact</Link>
               <Link to="/faq">FAQ</Link>
             </div>
           </div>
@@ -245,65 +231,11 @@ export default function Header() {
 
             {/* Nav Actions */}
             <div className={s.navActions}>
-              {/* Wishlist */}
-              <Link to="/favoris" className={s.navAction} aria-label="Favoris">
-                <Heart size={20} />
-                {wishCount > 0 && <span className={s.badge}>{wishCount}</span>}
-              </Link>
-
               {/* Cart */}
               <button className={s.navAction} aria-label="Panier" onClick={openCart}>
                 <ShoppingBag size={20} />
                 {cartCount > 0 && <span className={s.badge}>{cartCount}</span>}
               </button>
-
-              {/* User */}
-              <div className={s.megaMenuWrapper}>
-                <button
-                  className={s.navAction}
-                  aria-label="Mon compte"
-                  onClick={() => setUserMenuOpen(!userMenuOpen)}
-                >
-                  <User size={20} />
-                </button>
-                <AnimatePresence>
-                  {userMenuOpen && (
-                    <motion.div
-                      className={s.megaMenu}
-                      style={{ right: 0, left: 'auto', transform: 'none', minWidth: 200 }}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 8 }}
-                    >
-                      {isAuthenticated ? (
-                        <>
-                          <div style={{ padding: '8px 12px 12px', borderBottom: '1px solid rgba(201,168,76,0.15)', marginBottom: 8 }}>
-                            <div style={{ fontWeight: 600, color: 'var(--off-white)', fontSize: '0.9rem' }}>
-                              {user.name}
-                            </div>
-                            <div style={{ fontSize: '0.75rem', color: 'var(--gold)' }}>{user.email}</div>
-                          </div>
-                          <Link to="/compte" className={s.megaMenuLink} onClick={() => setUserMenuOpen(false)}>Mon Compte</Link>
-                          <Link to="/compte/commandes" className={s.megaMenuLink} onClick={() => setUserMenuOpen(false)}>Mes Commandes</Link>
-                          <Link to="/favoris" className={s.megaMenuLink} onClick={() => setUserMenuOpen(false)}>Mes Favoris</Link>
-                          <button
-                            className={s.megaMenuLink}
-                            style={{ width: '100%', textAlign: 'left', cursor: 'pointer', color: 'var(--error)', display: 'flex', alignItems: 'center', gap: 8 }}
-                            onClick={handleLogout}
-                          >
-                            <LogOut size={14} /> Déconnexion
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <Link to="/login" className={s.megaMenuLink} onClick={() => setUserMenuOpen(false)}>Se connecter</Link>
-                          <Link to="/register" className={s.megaMenuLink} onClick={() => setUserMenuOpen(false)}>Créer un compte</Link>
-                        </>
-                      )}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
 
               {/* Mobile Menu Toggle */}
               <button className={s.menuToggle} onClick={() => setMobileOpen(true)} aria-label="Menu">
@@ -370,32 +302,6 @@ export default function Header() {
                   )}
                 </div>
               ))}
-
-              <div style={{ marginTop: 24, paddingTop: 24, borderTop: '1px solid rgba(201,168,76,0.15)' }}>
-                {isAuthenticated ? (
-                  <>
-                    <Link to="/compte" className={s.mobileNavLink} onClick={() => setMobileOpen(false)}>
-                      <User size={16} /> Mon Compte
-                    </Link>
-                    <button
-                      className={s.mobileNavLink}
-                      style={{ width: '100%', color: 'var(--error)' }}
-                      onClick={() => { handleLogout(); setMobileOpen(false); }}
-                    >
-                      <LogOut size={16} /> Déconnexion
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <Link to="/login" className={s.mobileNavLink} onClick={() => setMobileOpen(false)}>
-                      <User size={16} /> Se connecter
-                    </Link>
-                    <Link to="/register" className={s.mobileNavLink} onClick={() => setMobileOpen(false)}>
-                      Créer un compte
-                    </Link>
-                  </>
-                )}
-              </div>
             </motion.div>
           </div>
         )}

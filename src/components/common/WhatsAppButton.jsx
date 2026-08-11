@@ -4,6 +4,7 @@ import { X, MessageCircle } from 'lucide-react';
 
 export default function WhatsAppButton() {
   const [tooltip, setTooltip] = useState(false);
+  const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '2250503744336';
 
   return (
     <div className="whatsapp-wrap" style={{ position: 'fixed', bottom: '32px', right: '32px', zIndex: 1000 }}>
@@ -40,7 +41,7 @@ export default function WhatsAppButton() {
       </AnimatePresence>
 
       <motion.a
-        href="https://wa.me/2250503744336?text=Bonjour%20Dar Al Hayaa%2C%20j'ai%20besoin%20d'aide%20pour%20ma%20commande."
+        href={`https://wa.me/${whatsappNumber}?text=Bonjour%20Laissa%2C%20j'ai%20besoin%20d'aide%20pour%20ma%20commande.`}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Contacter sur WhatsApp"

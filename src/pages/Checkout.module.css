@@ -8,7 +8,6 @@
 .header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   margin-bottom: 32px;
 }
 
@@ -22,16 +21,22 @@
   font-size: 0.9rem;
 }
 
-.secureBadge {
+.infoBanner {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: var(--success);
-  font-weight: 700;
-  font-size: 0.85rem;
-  background: rgba(39, 174, 96, 0.1);
-  padding: 6px 14px;
-  border-radius: var(--radius-full);
+  gap: 12px;
+  background: rgba(37, 211, 102, 0.1);
+  border: 1px solid rgba(37, 211, 102, 0.3);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 24px;
+  color: var(--navy);
+  font-size: 0.9rem;
+}
+
+.infoBanner svg {
+  color: #25D366;
+  flex-shrink: 0;
 }
 
 .layout {
@@ -41,30 +46,7 @@
   align-items: start;
 }
 
-/* Steps */
-.steps {
-  display: flex;
-  align-items: center;
-  margin-bottom: 24px;
-}
 
-.step {
-  font-weight: 600;
-  color: var(--gray-400);
-  font-size: 0.95rem;
-  transition: color var(--transition-fast);
-}
-
-.stepActive {
-  color: var(--navy);
-}
-
-.stepLine {
-  flex: 1;
-  height: 2px;
-  background: var(--gray-200);
-  margin: 0 16px;
-}
 
 /* Form Styles */
 .formCard {
@@ -79,6 +61,117 @@
   font-size: 1.4rem;
   color: var(--navy);
   margin-bottom: 24px;
+}
+
+.cityInputWrapper {
+  position: relative;
+}
+
+.citySuggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+  box-shadow: var(--shadow-md);
+  margin-top: 4px;
+}
+
+.citySuggestion {
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  font-size: 0.9rem;
+  color: var(--navy);
+}
+
+.citySuggestion:hover {
+  background: var(--gray-100);
+}
+
+.citySuggestions::-webkit-scrollbar {
+  width: 4px;
+}
+
+.citySuggestions::-webkit-scrollbar-thumb {
+  background: var(--gray-300);
+  border-radius: 4px;
+}
+
+.textarea {
+  width: 100%;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: 0.9rem;
+  color: var(--navy);
+  font-family: inherit;
+  transition: border-color var(--transition-fast);
+  resize: vertical;
+}
+
+.textarea:focus {
+  border-color: #25D366;
+  outline: none;
+}
+
+.whatsappBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  background: #25D366;
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  margin-top: 16px;
+}
+
+.whatsappBtn:hover:not(:disabled) {
+  background: #20BA5A;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+
+.whatsappBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.whatsappNote {
+  text-align: center;
+  color: var(--gray-500);
+  font-size: 0.85rem;
+  margin-top: 12px;
+}
+
+.paymentInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(37, 211, 102, 0.1);
+  border: 1px solid rgba(37, 211, 102, 0.3);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  margin-top: 16px;
+  color: var(--navy);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.paymentInfo svg {
+  color: #25D366;
+  flex-shrink: 0;
 }
 
 .formRow {
@@ -99,18 +192,6 @@
   margin-bottom: 8px;
 }
 
-.inputWrap {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.inputIcon {
-  position: absolute;
-  left: 14px;
-  color: var(--gray-400);
-}
-
 .input {
   width: 100%;
   border: 1px solid var(--gray-200);
@@ -122,101 +203,14 @@
   transition: border-color var(--transition-fast);
 }
 
-.inputWrap .input {
-  padding-left: 40px;
-}
-
 .input:focus {
-  border-color: var(--gold);
+  border-color: #25D366;
   outline: none;
 }
 
-.nextBtn, .payBtn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  width: 100%;
-  background: var(--gradient-gold);
-  color: var(--navy);
-  border: none;
-  border-radius: var(--radius-sm);
-  padding: 16px;
-  font-weight: 700;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all var(--transition-base);
-  margin-top: 16px;
-}
-
-.nextBtn:hover, .payBtn:hover:not(:disabled) {
-  filter: brightness(1.08);
-  box-shadow: var(--shadow-gold);
-}
-
-.payBtn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.backBtn {
-  display: block;
-  width: 100%;
-  text-align: center;
-  background: none;
-  border: none;
-  color: var(--gray-500);
-  margin-top: 16px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.spinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(13,27,42,0.3);
-  border-top-color: var(--navy);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
-
-/* Payment Methods */
-.paymentMethods {
-  margin-bottom: 24px;
-}
-
-.payMethod {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px;
-  border: 1px solid var(--gray-200);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.payMethodActive {
-  border-color: var(--gold);
-  background: rgba(201,168,76,0.05);
-}
-
-.payRadio {
-  accent-color: var(--gold);
-}
-
-.payIcons {
-  margin-left: auto;
-  display: flex;
-  gap: 8px;
-}
-
-.cardForm {
+.input[readonly] {
   background: var(--gray-100);
-  padding: 24px;
-  border-radius: var(--radius-md);
-  margin-bottom: 24px;
+  cursor: not-allowed;
 }
 
 /* Summary Sidebar */
@@ -338,10 +332,11 @@
   border-top: 1px dashed var(--gray-300);
 }
 
-/* Success State */
-.successWrap, .emptyWrap {
+/* Empty State */
+.emptyWrap {
   min-height: 80vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   background: var(--gray-100);
@@ -349,53 +344,10 @@
   padding: 24px;
 }
 
-.successCard {
-  background: white;
-  padding: 48px;
-  border-radius: var(--radius-2xl);
-  box-shadow: var(--shadow-lg);
-  max-width: 500px;
-}
-
-.successIcon {
-  color: var(--success);
-  margin-bottom: 24px;
-}
-
-.successCard h1 {
+.emptyWrap h2 {
   font-family: var(--font-display);
   color: var(--navy);
   margin-bottom: 16px;
-}
-
-.successCard p {
-  color: var(--gray-600);
-  margin-bottom: 12px;
-}
-
-.successActions {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  margin-top: 32px;
-}
-
-.primaryBtn {
-  background: var(--navy);
-  color: white;
-  padding: 12px 24px;
-  border-radius: var(--radius-full);
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.secondaryBtn {
-  background: var(--gray-200);
-  color: var(--navy);
-  padding: 12px 24px;
-  border-radius: var(--radius-full);
-  text-decoration: none;
-  font-weight: 600;
 }
 
 .emptyBtn {
@@ -417,10 +369,12 @@
 @media (max-width: 768px) {
   .checkoutPage { padding: 80px 0 40px; }
   .formCard, .summaryCard { padding: 20px; }
-  .header { flex-direction: column; gap: 12px; align-items: flex-start; }
 }
 
 @media (max-width: 480px) {
-  .formRow { grid-template-columns: 1fr; }
-  .successActions { flex-direction: column; }
+  .whatsappBtn { font-size: 0.9rem; padding: 14px; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }

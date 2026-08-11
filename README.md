@@ -1,16 +1,66 @@
-# React + Vite
+# Laissa - E-commerce Simple
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Site e-commerce simplifié avec système de commande via WhatsApp et base de données Supabase.
 
-Currently, two official plugins are available:
+## Fonctionnalités
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- 🛒 Catalogue de produits avec catégories
+- 📱 Commandes via WhatsApp (paiement à la livraison)
+- 🌍 Livraison uniquement en Côte d'Ivoire avec sélection de villes
+- 💾 Base de données Supabase pour le stockage en ligne
+- 🎨 Interface moderne et responsive
 
-## React Compiler
+## Installation
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Installer les dépendances:
+```bash
+npm install
+```
 
-## Expanding the Oxlint configuration
+2. Configurer l'environnement:
+```bash
+cp .env.example .env
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+3. Éditer `.env` avec vos informations Supabase:
+```
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key-here
+VITE_WHATSAPP_NUMBER=2250503744336
+```
+
+## Démarrage
+
+```bash
+npm run dev
+```
+
+Le site sera accessible sur `http://localhost:5173`
+
+## Construction pour la production
+
+```bash
+npm run build
+npm run preview
+```
+
+## Configuration Supabase
+
+Voir [SETUP_ENV.md](./SETUP_ENV.md) pour les instructions détaillées sur la configuration de Supabase.
+
+## Structure du projet
+
+- `src/pages/` - Pages du site (Home, Shop, Checkout, etc.)
+- `src/components/` - Composants réutilisables
+- `src/store/` - État global (cartStore)
+- `src/lib/` - Utilitaires et connexion Supabase
+- `src/data/` - Données statiques (produits, catégories)
+
+## Technologies
+
+- React 19
+- Vite
+- React Router
+- Framer Motion
+- Supabase
+- Zustand (gestion d'état)
