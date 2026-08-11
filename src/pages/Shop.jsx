@@ -16,18 +16,9 @@ const SORT_OPTIONS = [
   { value: 'bestsellers', label: 'Meilleures Ventes' },
 ];
 
-const PRICE_RANGES = [
-  { label: 'Tous les prix', min: 0, max: Infinity },
-  { label: 'Moins de 15 000 FCFA', min: 0, max: 15000 },
-  { label: '15 000 – 30 000 FCFA', min: 15000, max: 30000 },
-  { label: '30 000 – 60 000 FCFA', min: 30000, max: 60000 },
-  { label: 'Plus de 60 000 FCFA', min: 60000, max: Infinity },
-];
-
 export default function Shop({ categoryFilter = null, subcategoryFilter = null, title = 'Boutique', products = null, showPromoBanner = false, filterDiscount = false }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [sort, setSort] = useState('featured');
-  const [priceRange, setPriceRange] = useState(0);
   const [selectedCats, setSelectedCats] = useState(categoryFilter ? [categoryFilter] : []);
   const [selectedSubcats, setSelectedSubcats] = useState(subcategoryFilter ? [subcategoryFilter] : []);
   const [showFilters, setShowFilters] = useState(false);
@@ -71,10 +62,6 @@ export default function Shop({ categoryFilter = null, subcategoryFilter = null, 
       );
     }
 
-    // Price filter
-    const range = PRICE_RANGES[priceRange];
-    result = result.filter((p) => p.price >= range.min && p.price <= range.max);
-
     // Sort
     switch (sort) {
       case 'newest': result.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0)); break;
@@ -86,7 +73,7 @@ export default function Shop({ categoryFilter = null, subcategoryFilter = null, 
     }
 
     return result;
-  }, [selectedCats, selectedSubcats, sort, priceRange, search, products, showPromoBanner, filterDiscount]);
+  }, [selectedCats, selectedSubcats, sort, search, products, showPromoBanner, filterDiscount]);
 
   const toggleCat = (catId) => {
     setSelectedCats((prev) =>
@@ -194,28 +181,11 @@ export default function Shop({ categoryFilter = null, subcategoryFilter = null, 
               </div>
             )}
 
-            {/* Price */}
-            <div className={styles.filterGroup}>
-              <h4 className={styles.filterLabel}>Prix</h4>
-              {PRICE_RANGES.map((r, i) => (
-                <label key={i} className={styles.filterCheck}>
-                  <input
-                    type="radio"
-                    name="price"
-                    checked={priceRange === i}
-                    onChange={() => setPriceRange(i)}
-                  />
-                  <span className={styles.filterCheckBox} />
-                  <span>{r.label}</span>
-                </label>
-              ))}
-            </div>
-
             {/* Active filters reset */}
-            {(selectedCats.length > 0 || selectedSubcats.length > 0 || priceRange > 0) && (
+            {(selectedCats.length > 0 || selectedSubcats.length > 0) && (
               <button
                 className={styles.resetFilters}
-                onClick={() => { setSelectedCats([]); setSelectedSubcats([]); setPriceRange(0); }}
+                onClick={() => { setSelectedCats([]); setSelectedSubcats([]); }}
               >
                 <X size={14} /> Réinitialiser les filtres
               </button>
@@ -230,9 +200,9 @@ export default function Shop({ categoryFilter = null, subcategoryFilter = null, 
                 <button className={styles.filterToggle} onClick={() => setShowFilters(!showFilters)}>
                   <Filter size={16} />
                   Filtres
-                  {(selectedCats.length + selectedSubcats.length + (priceRange > 0 ? 1 : 0)) > 0 && (
+                  {(selectedCats.length + selectedSubcats.length) > 0 && (
                     <span className={styles.filterBadge}>
-                      {selectedCats.length + selectedSubcats.length + (priceRange > 0 ? 1 : 0)}
+                      {selectedCats.length + selectedSubcats.length}
                     </span>
                   )}
                 </button>
@@ -274,7 +244,7 @@ export default function Shop({ categoryFilter = null, subcategoryFilter = null, 
                 <div className={styles.noResultsIcon}>🔍</div>
                 <h3>Aucun produit trouvé</h3>
                 <p>Essayez de modifier vos filtres ou votre recherche.</p>
-                <button className={styles.resetBtn} onClick={() => { setSelectedCats([]); setPriceRange(0); }}>
+                <button className={styles.resetBtn} onClick={() => { setSelectedCats([]); setSelectedSubcats([]); }}>
                   Réinitialiser les filtres
                 </button>
               </div>
