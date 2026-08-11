@@ -20,8 +20,8 @@ const FadeInSection = ({ children, delay = 0 }) => (
 );
 
 const FEATURES = [
-  { icon: <Truck size={24} />, title: 'Livraison Offerte', desc: 'Dès 80€ d\'achat partout en Côte d\'Ivoire' },
-  { icon: <Shield size={24} />, title: 'Paiement Sécurisé', desc: 'Cryptage SSL 256 bits garanti' },
+  { icon: <Truck size={24} />, title: 'Livraison Offerte', desc: 'Dès 50 000 FCFA d\'achat en Côte d\'Ivoire' },
+  { icon: <Shield size={24} />, title: 'Paiement Sécurisé', desc: 'Paiement à la livraison en espèces' },
   { icon: <RefreshCw size={24} />, title: 'Retours 30 Jours', desc: 'Retours faciles et remboursement rapide' },
   { icon: <Award size={24} />, title: 'Qualité Certifiée', desc: 'Produits sélectionnés avec soin' },
   { icon: <PhoneCall size={24} />, title: 'Support 7j/7', desc: 'Équipe disponible pour vous aider' },

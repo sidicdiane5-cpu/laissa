@@ -266,10 +266,10 @@ export function TermsPage() {
           <p>Les prix sont indiqués en FCFA. Dar Al Hayaa se réserve le droit de modifier ses prix à tout moment mais le produit sera facturé sur la base du tarif en vigueur au moment de la validation de la commande.</p>
           
           <h2>6. Paiement</h2>
-          <p>Le paiement s'effectue à la livraison. Le client paie en espèces ou via mobile money selon accord avec le livreur lors de la remise du colis.</p>
+          <p>Le paiement s'effectue à la livraison en espèces uniquement. Le client paie au livreur lors de la remise du colis.</p>
           
           <h2>7. Livraison</h2>
-          <p>Les produits sont livrés à l'adresse indiquée par le client lors de la commande. Les délais de livraison sont de 2 à 5 jours ouvrables pour la Côte d'Ivoire.</p>
+          <p>Les produits sont livrés à l'adresse indiquée par le client lors de la commande. Les délais de livraison sont de 2 jours à Abidjan et 3 à 5 jours à l'intérieur de la Côte d'Ivoire.</p>
           
           <h2>8. Droit de rétractation</h2>
           <p>Conformément à la législation en vigueur, vous disposez d'un délai de 30 jours à compter de la réception de votre commande pour exercer votre droit de rétractation.</p>
@@ -304,14 +304,14 @@ export function ShippingPage() {
           
           <h2>2. Délais de livraison</h2>
           <ul>
-            <li><strong>Abidjan et environs :</strong> 2 à 3 jours ouvrables</li>
-            <li><strong>Intérieur de la Côte d'Ivoire :</strong> 3 à 5 jours ouvrables</li>
+            <li><strong>Abidjan :</strong> 2 jours</li>
+            <li><strong>Intérieur de la Côte d'Ivoire :</strong> 3 à 5 jours</li>
           </ul>
           
           <h2>3. Frais de livraison</h2>
           <ul>
-            <li><strong>Gratuite</strong> dès 80€ d'achat en Côte d'Ivoire</li>
-            <li><strong>5.99€</strong> pour les commandes inférieures à 80€</li>
+            <li><strong>Gratuite</strong> dès 50 000 FCFA d'achat en Côte d'Ivoire</li>
+            <li><strong>3 000 FCFA</strong> pour les commandes inférieures à 50 000 FCFA</li>
           </ul>
           
           <h2>4. Modes de livraison</h2>

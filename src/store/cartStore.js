@@ -1,7 +1,6 @@
 // Store Panier — Zustand
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { validateCoupon } from '../lib/api';
 
 export const useCartStore = create(
   persist(
@@ -54,20 +53,21 @@ export const useCartStore = create(
       // Vider le panier
       clearCart: () => set({ items: [], couponCode: '', discount: 0 }),
 
-      // Appliquer un coupon (valide cote Supabase)
-      applyCoupon: async (code) => {
-        try {
-          const result = await validateCoupon(code, get().getSubtotal());
-
-          if (result.success) {
-            set({ couponCode: code.trim().toUpperCase(), discount: result.discount });
-            return { success: true, message: result.message };
-          }
-          return { success: false, message: result.message };
-        } catch (error) {
-          console.error('[v0] Erreur validation coupon:', error.message);
-          return { success: false, message: 'Impossible de valider le code promo' };
+      // Appliquer un coupon (simplifié sans backend)
+      applyCoupon: (code) => {
+        // Coupons simplifiés pour la démo
+        const coupons = {
+          'DARAL10': 10,
+          'DARAL20': 20,
+          'LAISSA15': 15
+        };
+        
+        const upperCode = code.trim().toUpperCase();
+        if (coupons[upperCode]) {
+          set({ couponCode: upperCode, discount: coupons[upperCode] });
+          return { success: true, message: `Code ${upperCode} appliqué : ${coupons[upperCode]}% de réduction` };
         }
+        return { success: false, message: 'Code promo invalide' };
       },
 
       // Retirer le coupon applique
@@ -83,7 +83,7 @@ export const useCartStore = create(
       },
       getShipping: () => {
         const subtotal = get().getSubtotal();
-        return subtotal >= 80 ? 0 : 5.99;
+        return subtotal >= 50000 ? 0 : 3000;
       },
       getTotal: () => {
         return get().getSubtotal() - get().getDiscount() + get().getShipping();

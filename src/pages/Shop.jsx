@@ -18,10 +18,10 @@ const SORT_OPTIONS = [
 
 const PRICE_RANGES = [
   { label: 'Tous les prix', min: 0, max: Infinity },
-  { label: 'Moins de 25€', min: 0, max: 25 },
-  { label: '25€ – 50€', min: 25, max: 50 },
-  { label: '50€ – 100€', min: 50, max: 100 },
-  { label: 'Plus de 100€', min: 100, max: Infinity },
+  { label: 'Moins de 15 000 FCFA', min: 0, max: 15000 },
+  { label: '15 000 – 30 000 FCFA', min: 15000, max: 30000 },
+  { label: '30 000 – 60 000 FCFA', min: 30000, max: 60000 },
+  { label: 'Plus de 60 000 FCFA', min: 60000, max: Infinity },
 ];
 
 export default function Shop({ categoryFilter = null, subcategoryFilter = null, title = 'Boutique', products = null, showPromoBanner = false, filterDiscount = false }) {
