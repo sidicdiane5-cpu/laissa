@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Phone, MapPin, ArrowRight } from 'lucide-react';
+import { Phone, MapPin, ArrowRight, Mail } from 'lucide-react';
 import styles from './Footer.module.css';
 
 const FOOTER_LINKS = {
