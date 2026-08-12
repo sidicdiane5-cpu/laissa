@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore } from '../../store/cartStore';
 import { PRODUCTS } from '../../data/products';
 import s from './Header.module.css';
+import logoImg from '../../assets/logo-dh.png';
 
 const NAV_ITEMS = [
   { label: 'Accueil', to: '/' },
@@ -65,6 +66,7 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openMega, setOpenMega] = useState(null);
+  const [openMobileAccordion, setOpenMobileAccordion] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
@@ -79,6 +81,21 @@ export default function Header() {
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  // Fermer le menu si on resize vers desktop
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth > 1100) setMobileOpen(false);
+    };
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  // Bloquer le scroll body quand menu mobile ouvert
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
 
   useEffect(() => {
     if (searchQuery.length > 1) {
@@ -102,7 +119,9 @@ export default function Header() {
     }
   };
 
-
+  const toggleMobileAccordion = (label) => {
+    setOpenMobileAccordion(prev => prev === label ? null : label);
+  };
 
   return (
     <>
@@ -127,10 +146,23 @@ export default function Header() {
           <div className={`${s.navContent} container`}>
             {/* Logo */}
             <Link to="/" className={s.logo}>
-              <div className={s.logoIcon}>🌙</div>
-              <div className={s.logoText}>
-                <span className={s.logoName}>Dar Al Hayaa</span>
-                <span className={s.logoTagline}>Mode Islamique Premium</span>
+              <img
+                src={logoImg}
+                alt="Dar Al-Hayaa Modest Fashion"
+                className={s.logoImg}
+                onError={(e) => {
+                  // Fallback si l'image ne charge pas
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'flex';
+                }}
+              />
+              {/* Fallback text logo */}
+              <div className={s.logoFallback} style={{ display: 'none' }}>
+                <div className={s.logoIcon}>🌙</div>
+                <div className={s.logoText}>
+                  <span className={s.logoName}>Dar Al-Hayaa</span>
+                  <span className={s.logoTagline}>Modest Fashion</span>
+                </div>
               </div>
             </Link>
 
@@ -238,7 +270,7 @@ export default function Header() {
                 {cartCount > 0 && <span className={s.badge}>{cartCount}</span>}
               </button>
 
-              {/* Mobile Menu Toggle */}
+              {/* Mobile Menu Toggle (hamburger) */}
               <button className={s.menuToggle} onClick={() => setMobileOpen(true)} aria-label="Menu">
                 <Menu size={22} />
               </button>
@@ -247,7 +279,7 @@ export default function Header() {
         </nav>
       </header>
 
-      {/* Mobile Menu */}
+      {/* Mobile Drawer Menu */}
       <AnimatePresence>
         {mobileOpen && (
           <div className={s.mobileMenu}>
@@ -265,41 +297,93 @@ export default function Header() {
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             >
+              {/* Drawer Header */}
               <div className={s.mobileMenuHeader}>
-                <div className={s.logo}>
-                  <div className={s.logoIcon}>🌙</div>
-                  <div className={s.logoText}>
-                    <span className={s.logoName}>Dar Al Hayaa</span>
+                <Link to="/" className={s.logo} onClick={() => setMobileOpen(false)}>
+                  <img
+                    src={logoImg}
+                    alt="Dar Al-Hayaa"
+                    className={s.logoImg}
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }}
+                  />
+                  <div className={s.logoFallback} style={{ display: 'none' }}>
+                    <div className={s.logoIcon}>🌙</div>
+                    <div className={s.logoText}>
+                      <span className={s.logoName}>Dar Al-Hayaa</span>
+                    </div>
                   </div>
-                </div>
-                <button className={s.menuToggle} onClick={() => setMobileOpen(false)}>
+                </Link>
+                <button className={s.menuToggle} style={{ display: 'flex' }} onClick={() => setMobileOpen(false)}>
                   <X size={22} />
                 </button>
               </div>
 
+              {/* Mobile Search */}
+              <div className={s.mobileSearch}>
+                <form onSubmit={(e) => { handleSearch(e); setMobileOpen(false); }} style={{ position: 'relative' }}>
+                  <Search size={16} className={s.searchIcon} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'rgba(250,250,247,0.4)', pointerEvents: 'none' }} />
+                  <input
+                    type="text"
+                    className={s.searchInput}
+                    placeholder="Rechercher..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    style={{ width: '100%' }}
+                  />
+                </form>
+              </div>
+
+              {/* Nav Items with accordion for sub-menus */}
               {NAV_ITEMS.map((item) => (
                 <div key={item.label}>
-                  <NavLink
-                    to={item.to}
-                    className={s.mobileNavLink}
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    {item.label}
-                  </NavLink>
-                  {item.sub && (
-                    <div style={{ marginLeft: 16, marginTop: 8 }}>
-                      {item.sub.map((sub) => (
-                        <Link
-                          key={sub.label}
-                          to={sub.to}
-                          className={s.mobileNavLink}
-                          style={{ fontSize: '0.9rem', color: 'var(--gray-400)' }}
-                          onClick={() => setMobileOpen(false)}
+                  {item.sub ? (
+                    <>
+                      <button
+                        className={s.mobileAccordionToggle}
+                        onClick={() => toggleMobileAccordion(item.label)}
+                      >
+                        <span>{item.label}</span>
+                        <motion.span
+                          animate={{ rotate: openMobileAccordion === item.label ? 180 : 0 }}
+                          transition={{ duration: 0.2 }}
                         >
-                          {sub.label}
-                        </Link>
-                      ))}
-                    </div>
+                          <ChevronDown size={16} />
+                        </motion.span>
+                      </button>
+                      <AnimatePresence>
+                        {openMobileAccordion === item.label && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            style={{ overflow: 'hidden' }}
+                          >
+                            {item.sub.map((sub) => (
+                              <Link
+                                key={sub.label}
+                                to={sub.to}
+                                className={s.mobileSubLink}
+                                onClick={() => setMobileOpen(false)}
+                              >
+                                {sub.label}
+                              </Link>
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </>
+                  ) : (
+                    <NavLink
+                      to={item.to}
+                      className={({ isActive }) => `${s.mobileNavLink} ${isActive ? s.active : ''}`}
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      {item.label}
+                    </NavLink>
                   )}
                 </div>
               ))}

@@ -73,7 +73,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 2rem;
+  gap: 1rem;
+  flex-wrap: nowrap;
 }
 
 /* Logo */
@@ -83,6 +84,27 @@
   gap: 10px;
   text-decoration: none;
   flex-shrink: 0;
+}
+
+/* Logo image (DH Dar Al-Hayaa) */
+.logoImg {
+  height: 54px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(201,168,76,0.25));
+  transition: filter var(--transition-base), transform var(--transition-base);
+}
+
+.logo:hover .logoImg {
+  filter: drop-shadow(0 4px 16px rgba(201,168,76,0.5));
+  transform: scale(1.03);
+}
+
+/* Fallback text logo */
+.logoFallback {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .logoIcon {
@@ -119,6 +141,7 @@
   color: var(--gold);
   font-weight: 500;
 }
+
 
 /* Nav Links */
 .navLinks {
@@ -345,7 +368,7 @@
   color: var(--gold-light);
 }
 
-/* Mobile Menu Button */
+/* Mobile Menu Button — visible only on mobile */
 .menuToggle {
   display: none;
   width: 40px;
@@ -358,6 +381,7 @@
   cursor: pointer;
   background: none;
   border: none;
+  flex-shrink: 0;
 }
 
 .menuToggle:hover {
@@ -365,9 +389,8 @@
   color: var(--gold);
 }
 
-/* Mobile Menu */
+/* Mobile Menu — always rendered by React, displayed as overlay */
 .mobileMenu {
-  display: none;
   position: fixed;
   inset: 0;
   z-index: var(--z-modal);
@@ -415,19 +438,73 @@
   margin-bottom: 4px;
 }
 
-.mobileNavLink:hover {
+.mobileNavLink:hover,
+.mobileNavLink.active {
   background: rgba(201,168,76,0.1);
   color: var(--gold-light);
 }
 
-@media (max-width: 1100px) {
-  .navLinks { display: none; }
-  .searchBar { display: none; }
-  .menuToggle { display: flex; }
-  .mobileMenu { display: block; }
+/* Mobile search bar inside drawer */
+.mobileSearch {
+  margin-bottom: 20px;
 }
 
+.mobileSubLink {
+  display: flex;
+  align-items: center;
+  padding: 9px 16px 9px 32px;
+  color: rgba(250,250,247,0.6);
+  font-size: 0.875rem;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  text-decoration: none;
+  margin-bottom: 2px;
+}
+
+.mobileSubLink:hover {
+  color: var(--gold-light);
+  background: rgba(201,168,76,0.07);
+}
+
+.mobileAccordionToggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 16px;
+  color: rgba(250,250,247,0.85);
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 4px;
+  text-align: left;
+}
+
+.mobileAccordionToggle:hover {
+  background: rgba(201,168,76,0.1);
+  color: var(--gold-light);
+}
+
+/* ===================== RESPONSIVE ===================== */
+
+/* Tablet & below: hide desktop nav, show hamburger */
+@media (max-width: 1100px) {
+  .navLinks { display: none !important; }
+  .searchBar { display: none !important; }
+  .menuToggle { display: flex; }
+}
+
+/* Mobile: hide top bar, reduce padding */
 @media (max-width: 768px) {
   .topBar { display: none; }
-  .mainNav { padding: 12px 0; }
+  .mainNav { padding: 10px 0; }
+  .logo { gap: 8px; }
+  .logoImg {
+    height: 44px;
+    width: auto;
+  }
 }
