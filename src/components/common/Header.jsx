@@ -95,9 +95,10 @@ export default function Header() {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/boutique?search=${encodeURIComponent(searchQuery)}`);
+      navigate(`/boutique?search=${encodeURIComponent(searchQuery.trim())}`);
       setSearchQuery('');
       setSearchResults([]);
+      setShowSearch(false);
     }
   };
 
